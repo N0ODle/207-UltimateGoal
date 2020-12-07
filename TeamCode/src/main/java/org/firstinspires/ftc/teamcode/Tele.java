@@ -53,38 +53,55 @@ public class Tele extends OpMode {
         double rightStickY = (double) -gamepad1.right_stick_y;
 
         double leftTriggerIntake = (double) gamepad2.left_trigger;
-        double rightTriggerIntake = (double) gamepad2.right_trigger;
+        double rightTriggerIntake = (double) -gamepad2.right_trigger;
         double leftStickServo = (double) gamepad2.left_stick_x;
         double rightStickServo = (double) gamepad2.right_stick_x;
 
         drive.driveBot(leftStickY, rightStickX, rightTrigger, leftTrigger, 0.0, 0.0, factor);
-//        bot.LI.setPower(rightTriggerIntake);
-//        bot.RI.setPower(rightTriggerIntake);
-        if(gamepad2.left_stick_y > 0.15) {
-            bot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            bot.lift.setPower(.1);
+        if(gamepad2.right_trigger > 0.15) {
+            bot.shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bot.shooter.setPower(-0.1);
+            bot.intake.setPower(-0.1);
         }
-        if(gamepad2.left_stick_y < -0.15) {
-            bot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            bot.lift.setPower(-.1);
+        if(gamepad2.left_trigger > 0.15) {
+            bot.shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bot.shooter.setPower(0);
+            bot.intake.setPower(0);
         }
-//        if(gamepad2.left_stick_y == 0.0)
-//            bot.lift.setPower(0.0);
-        if(gamepad2.x) {
-            bot.lift.setTargetPosition(bot.lift.getCurrentPosition());
-            bot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-
         if(gamepad2.a) {
-            bot.clamp.setPosition(0.1);
+            bot.discPlacer.setPosition(0.1);
             telemetry.addData(">", "0.1");
             telemetry.update();
         }
         if(gamepad2.b) {
-            bot.clamp.setPosition(0.9);
+            bot.discPlacer.setPosition(0.9);
             telemetry.addData(">", "0.9");
             telemetry.update();
         }
+
+        if(gamepad2.x) {
+            bot.wobbleGrabber.setPosition(0);
+            telemetry.addData(">", "0.1");
+            telemetry.update();
+        }
+        if(gamepad2.y) {
+            bot.wobbleGrabber.setPosition(0.9);
+            telemetry.addData(">", "1");
+            telemetry.update();
+        }
+        if(gamepad2.right_bumper) {
+            bot.wobbleHook.setPosition(0);
+            telemetry.addData(">", "0");
+            telemetry.update();
+        }
+        if(gamepad2.left_bumper) {
+            bot.wobbleHook.setPosition(1);
+            telemetry.addData(">", "1");
+            telemetry.update();
+        }
+
     }
 
     @Override
