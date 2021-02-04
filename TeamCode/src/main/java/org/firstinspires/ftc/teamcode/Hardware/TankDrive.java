@@ -24,18 +24,19 @@ public class TankDrive {
     }
 
 
-    public static void driveBot (double leftStickY, double rightStickX, double rightTrigger, double leftTrigger, double rightStickY, double leftStickX){
+    public static void driveBot (double leftStickY, double rightStickX, double rightTrigger,
+                                 double leftTrigger, double rightStickY, double leftStickX, double factor){
         if(leftStickY > 0.15 || leftStickY < -0.15){
-            bot.BL.setPower(-leftStickY);
-            bot.FL.setPower(leftStickY);
+            bot.BL.setPower(leftStickY);
+            bot.FL.setPower(-leftStickY);
         }
         else{
             bot.BL.setPower(0.0);
             bot.FL.setPower(0.0);
         }
         if(rightStickY > 0.15 || rightStickY < -0.15){
-            bot.FR.setPower(rightStickY);
-            bot.BR.setPower(-rightStickY);
+            bot.FR.setPower(-rightStickY);
+            bot.BR.setPower(rightStickY);
         }
         else {
             bot.BR.setPower(0.0);

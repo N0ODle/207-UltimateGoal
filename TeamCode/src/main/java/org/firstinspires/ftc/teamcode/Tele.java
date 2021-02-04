@@ -20,6 +20,7 @@ public class Tele extends OpMode {
     Bot bot = new Bot();
     int TankDrive = -1;
     double factor = 0.75;
+    TankDrive drive;
     /*
     fr = 1
     fl = 2
@@ -31,6 +32,7 @@ public class Tele extends OpMode {
     @Override
     public void init() {
         bot.init(hardwareMap, telemetry, false);
+        drive = new TankDrive(bot);
     }
 
     @Override
@@ -44,8 +46,7 @@ public class Tele extends OpMode {
 
     @Override
     public void loop() {
-
-        GameDrive drive = new GameDrive(bot);
+        // Tank/Game drive initialization moved to init so it is not re-initialized every time
         double leftStickY = (double) -gamepad1.left_stick_y;
         double rightTrigger = (double) gamepad1.right_trigger;
         double leftTrigger = (double) gamepad1.left_trigger;
@@ -57,7 +58,7 @@ public class Tele extends OpMode {
   //      double leftStickServo = (double) gamepad2.left_stick_x;
  //       double rightStickServo = (double) gamepad2.right_stick_x;
 
-        drive.driveBot(leftStickY, rightStickX, rightTrigger, leftTrigger, 0.0, 0.0, factor);
+        drive.driveBot(leftStickY, rightStickX, rightTrigger, leftTrigger, rightStickY, 0.0, factor);
 
         bot.shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

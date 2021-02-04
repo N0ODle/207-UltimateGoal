@@ -21,7 +21,8 @@ public class GameDrive {
         this.bot = bot;
     }
 
-    public static void driveBot(double leftStickY,double rightStickX,double rightTrigger,double leftTrigger,double leftStickX,double rightStickY, double factor) {
+    public static void driveBot(double leftStickY,double rightStickX,double rightTrigger,
+                                double leftTrigger,double leftStickX,double rightStickY, double factor) {
         if(rightStickX != 0.0) {
 //           bot.turnPower(factor * rightStickX);
             bot.strafePower(factor * rightStickX);
