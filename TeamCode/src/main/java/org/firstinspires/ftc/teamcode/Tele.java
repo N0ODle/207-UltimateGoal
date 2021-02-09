@@ -21,7 +21,12 @@ public class Tele extends OpMode {
     int TankDrive = -1;
     double factor = 0.75;
     TankDrive drive;
+
+    // Buffer area for controller triggers
     private double buffer = 0.15;
+
+    // Position for the disc pusher arm (-1 is out and 1 is pushing)
+    private int armPos = -1;
     /*
     fr = 1
     fl = 2
@@ -115,19 +120,30 @@ public class Tele extends OpMode {
 
     // Updates disc pusher
     private void updateDiscPlacer(){
-        // If a is pressed, disc pusher is out (not pushing)
-        if(gamepad2.a) {
-            bot.discPlacer.setPosition(0.1);
-            telemetry.addData(">", "0.1");
-            telemetry.update();
-        }
-
-        // If b is pressed, disc pusher is pushing
-        if(gamepad2.b) {
+        // if a is pressed once, placer goes to opposite position and the variable
+        //     controlling it gets multiplied by -1
+        // Arm goes to pushing position if a is pressed an it is in
+        if(gamepad2.a && armPos == -1){
             bot.discPlacer.setPosition(0.9);
             telemetry.addData(">", "0.9");
             telemetry.update();
+            armPos *= -1;
         }
+
+        // Arm goes to rest position if a is pressed an it is pushing
+        if(gamepad2.a && armPos == 1){
+            bot.discPlacer.setPosition(0.1);
+            telemetry.addData(">", "0.1");
+            telemetry.update();
+            armPos *= -1;
+        }
+
+//        // If b is pressed, disc pusher is pushing
+//        if(gamepad2.b) {
+//            bot.discPlacer.setPosition(0.9);
+//            telemetry.addData(">", "0.9");
+//            telemetry.update();
+//        }
     }
 
     // Updates wobble mechanism
