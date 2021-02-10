@@ -27,6 +27,12 @@ public class Tele extends OpMode {
 
     // Position for the disc pusher arm (-1 is out and 1 is pushing)
     private int armPos = -1;
+
+    // Position for the wobble hook (-1 is in and 1 is out)
+    private int hookPos = -1;
+
+    // Position for the wobble arm (-1 is back and 1 is forward)
+    private int wobbleArmPos = -1;
     /*
     fr = 1
     fl = 2
@@ -66,6 +72,9 @@ public class Tele extends OpMode {
 
         drive.driveBot(leftStickY, rightStickX, rightTrigger, leftTrigger, rightStickY, 0.0, factor);
 
+        bot.shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         // Update all gamepad2 mechanisms
         updateShooter();
         updateIntake();
@@ -77,42 +86,41 @@ public class Tele extends OpMode {
     // Update's shooter power
     private void updateShooter(){
         double minPower = 0.0;
-        double lowPower = -0.5;
-        double highPower = -0.9;
+        double goalPower = -0.5;
+        double pegPower = -0.6;
 
-        bot.shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // If right trigger is not pressed, do not run shooter (small buffer area of 0.15)
-        if(gamepad2.right_trigger <= buffer) {
+        // If left bumper is not pressed, bot shooter power set to 0
+        if(!gamepad2.left_bumper){
             bot.shooter.setPower(minPower);
         }
-        // If right trigger is pressed anything in between 0 and full, set shooter power to 50%
-        else if(gamepad2.right_trigger > buffer && gamepad2.right_trigger < 1) {
-            bot.shooter.setPower(lowPower);
+        // If left bumper is pressed, add enough power to shoot into the top goal
+        else if(gamepad2.left_bumper){
+            bot.shooter.setPower(goalPower);
         }
-        // If right trigger is pressed all the way, set shooter power to 90%
-        else if(gamepad2.right_trigger == 1) {
-            bot.shooter.setPower(highPower);
+        // If right bumper not pressed, do not do anything
+        if(!gamepad2.right_bumper){
+            bot.shooter.setPower(minPower);
+        }
+        // if right bumper is pressed down, add enough power to shoot the peg
+        else if(gamepad2.right_bumper){
+            bot.shooter.setPower(pegPower);
         }
     }
 
     // Updates intake power
     private void updateIntake(){
         // Max and min intake power
-        double maxOuttakePower = 1.0;
         double minIntakePower = 0.0;
 
         // Set intake power whatever percent the left trigger is pushed down
         if(gamepad2.left_trigger > buffer) {
             bot.intake.setPower(-gamepad2.left_trigger);
         }
-
-        // If x is pressed, outtake
-        else if(gamepad2.x){
-            bot.intake.setPower(maxOuttakePower);
+        // Set outtake power to whatever percent the right trigger is pushed down
+        else if(gamepad2.right_trigger > buffer){
+            bot.intake.setPower(gamepad2.right_trigger);
         }
-
+        // If neither trigger is pushed down, set the intake power to 0
         else{
             bot.intake.setPower(minIntakePower);
         }
@@ -148,28 +156,25 @@ public class Tele extends OpMode {
 
     // Updates wobble mechanism
     private void updateWobble(){
-        // x-button on gamepad1 sets wobble grabber to forward position, and y-button sets to
-        //     backwards position. Gamepad1 is used to give more space on gamepad2
-        if(gamepad1.x) {
+        // x-button on gamepad2 sets wobble hook position to in/out
+        if(gamepad2.x && hookPos == -1) {
             bot.wobbleGrabber.setPosition(0);
             telemetry.addData(">", "0");
             telemetry.update();
         }
-
-        // if y is pressed on gamepad1, the wobbleGrabber is in the backwards position
-        if(gamepad1.y) {
+        else if(gamepad2.x && hookPos == 1) {
             bot.wobbleGrabber.setPosition(0.9);
             telemetry.addData(">", "0.9");
             telemetry.update();
         }
 
-        // Bumpers on pad 2 set position of small wobble hook that holds the wobble goal
-        if(gamepad2.right_bumper) {
+        // y-button on gamepad2 sets wobble arm position to in/out
+        if(gamepad2.y && wobbleArmPos == -1) {
             bot.wobbleHook.setPosition(0);
             telemetry.addData(">", "0");
             telemetry.update();
         }
-        if(gamepad2.left_bumper) {
+        else if(gamepad2.y && wobbleArmPos == 1) {
             bot.wobbleHook.setPosition(1);
             telemetry.addData(">", "1");
             telemetry.update();
