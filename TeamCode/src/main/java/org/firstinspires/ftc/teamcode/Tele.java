@@ -90,9 +90,9 @@ public class Tele extends OpMode {
 
     // Update's shooter power
     private void updateShooter(){
-        double minPower = -0.01;
-        double goalPower = -0.02;
-        double pegPower = -0.02;
+        double minPower = 0.0;
+        double goalPower = -0.8;
+        double pegPower = -0.75;
 
         // If right bumper is pressed, add enough power to shoot into the top goal
         if(gamepad2.right_bumper){
