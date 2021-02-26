@@ -69,8 +69,8 @@ public class Bot {
         tele.update();
         BR.setDirection(DcMotorSimple.Direction.FORWARD);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
-        FL.setDirection(DcMotorSimple.Direction.FORWARD);
-        FR.setDirection( DcMotorSimple.Direction.REVERSE);
+        FL.setDirection(DcMotorSimple.Direction.REVERSE);
+        FR.setDirection( DcMotorSimple.Direction.FORWARD);
         shooter.setDirection(DcMotorSimple.Direction.REVERSE);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -166,8 +166,8 @@ public class Bot {
     public void turnPower(double power) {
         BL.setPower(-power);
         BR.setPower(power);
-        FR.setPower(power);
-        FL.setPower(-power);
+        FR.setPower(-power);
+        FL.setPower(power);
     }
 
     public void drivePower(double power) {
@@ -214,16 +214,16 @@ public class Bot {
             case FORWARD:
                 FL.setTargetPosition(target);
                 FR.setTargetPosition(target);
-                BL.setTargetPosition(-target);
-                BR.setTargetPosition(-target);
+                BL.setTargetPosition(target);
+                BR.setTargetPosition(target);
                 x = Math.max(-BR.getCurrentPosition(), Math.max(-BL.getCurrentPosition(), Math.max(FR.getCurrentPosition(), FL.getCurrentPosition())));
                 break;
 
             case BACKWARD:
                 FL.setTargetPosition(-target);
                 FR.setTargetPosition(-target);
-                BL.setTargetPosition(target);
-                BR.setTargetPosition(target);
+                BL.setTargetPosition(-target);
+                BR.setTargetPosition(-target);
                 x = Math.max(BR.getCurrentPosition(), Math.max(BL.getCurrentPosition(), Math.max(-FR.getCurrentPosition(), -FL.getCurrentPosition())));
                 break;
 

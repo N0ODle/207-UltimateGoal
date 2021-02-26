@@ -35,10 +35,10 @@ public class TankDrive {
         } else if (Math.abs(leftStickY) > 0.15 || Math.abs(rightStickY) > 0.15) {
             if (leftStickY > 0.15 || leftStickY < -0.15) {
                 bot.BL.setPower(leftStickY);
-                bot.FL.setPower(-leftStickY);
+                bot.FL.setPower(leftStickY);
             }
             if (rightStickY > 0.15 || rightStickY < -0.15) {
-                bot.FR.setPower(-rightStickY);
+                bot.FR.setPower(rightStickY);
                 bot.BR.setPower(rightStickY);
             }
         }
