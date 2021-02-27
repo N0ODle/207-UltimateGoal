@@ -79,7 +79,7 @@ public class Auton1 extends OpMode{
                     break;
 
                 case 2:
-                    int en = robot.autonDrive(MovementEnum.FORWARD, 3000);
+                    int en = robot.autonDrive(MovementEnum.FORWARD, 730);
                     robot.changeRunModeAuton(DcMotor.RunMode.RUN_TO_POSITION);
                     robot.drivePower(1.0);
                     telemetry.addData("Cas1, en: ", en);
@@ -95,7 +95,7 @@ public class Auton1 extends OpMode{
                         robot.changeRunModeAuton(DcMotor.RunMode.RUN_USING_ENCODER);
                         robot.changeRunModeAuton(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                         robot.strafePower(0.0);
-                        auto++;
+                        auto = -1;
                     }
                     break;
 
