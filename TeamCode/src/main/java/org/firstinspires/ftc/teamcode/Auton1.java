@@ -20,6 +20,8 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 @Autonomous(name="auton test", group="Autonomous")
 public class Auton1 extends OpMode{
+    private static final double TICKS_PER_REV = 537.6 * (80.0/72.0);
+    private static final double TICKS_PER_INCH = TICKS_PER_REV/(4.0 * Math.PI);
     private ElapsedTime runtime = new ElapsedTime();
     //    private DigitalChannel DigChannel;
     Bot robot = new Bot();
@@ -30,6 +32,7 @@ public class Auton1 extends OpMode{
 //        tensorFlow.init(hardwareMap, telemetry);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        robot.wobbleHook.setPosition(1.0);
 
 
 
@@ -72,16 +75,16 @@ public class Auton1 extends OpMode{
                     break;
 
                 case 1:
-                    robot.wobbleGrabber.setPosition(0.9);
+                    robot.wobbleGrabber.setPosition(0.0);
                     robot.wobbleHook.setPosition(1.0);
                     Thread.sleep(1000);
                     auto++;
                     break;
 
                 case 2:
-                    int en = robot.autonDrive(MovementEnum.FORWARD, 730);
+                    int en = robot.autonDrive(MovementEnum.FORWARD, (int)(TICKS_PER_INCH * 75.5));
                     robot.changeRunModeAuton(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.drivePower(1.0);
+                    robot.drivePower(0.5);
                     telemetry.addData("Cas1, en: ", en);
                     telemetry.addData("FL: ", robot.FL.getCurrentPosition());
                     telemetry.addData("FR: ", robot.FR.getCurrentPosition());
