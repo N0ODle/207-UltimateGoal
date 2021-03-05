@@ -103,21 +103,32 @@ public class Auton1 extends OpMode{
                     break;
 
                 case 3:
+                    // Run the shooter to the correct power and start the timer
                     robot.shooter.setPower(-0.75);
                     runtime.reset();
                     auto++;
                     break;
 
                 case 4:
+                    // Once the timer reaches at least 1.5 seconds, shoot the first disc and
+                    //    reset the timer again. Once it reaches 1.5 seconds again, move the
+                    //    disc arm back into position and reset the timer. Repeat 2 more times
                     for(int i = 0; i < 3; i++){
                         if(runtime.seconds() >= 1.5){
                             robot.discPlacer.setPosition(0.1);
                         }
 
-                        robot.discPlacer.setPosition(1.0);
+                        runtime.reset();
+
+                        if(runtime.seconds() >= 1.5){
+                            robot.discPlacer.setPosition(1.0);
+                        }
+
                         runtime.reset();
                     }
 
+                    // Set shooter power to 0
+                    robot.shooter.setPower(0.0);
                     auto = -1;
                     break;
 
