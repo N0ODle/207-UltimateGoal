@@ -216,7 +216,7 @@ public class Bot {
                 FR.setTargetPosition(target);
                 BL.setTargetPosition(target);
                 BR.setTargetPosition(target);
-                x = Math.max(-BR.getCurrentPosition(), Math.max(-BL.getCurrentPosition(), Math.max(FR.getCurrentPosition(), FL.getCurrentPosition())));
+                x = Math.max(BR.getCurrentPosition(), Math.max(BL.getCurrentPosition(), Math.max(FR.getCurrentPosition(), FL.getCurrentPosition())));
                 break;
 
             case BACKWARD:
