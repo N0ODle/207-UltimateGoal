@@ -106,6 +106,9 @@ public class Auton1 extends OpMode{
                     // Run the shooter to the correct power and start the timer
                     robot.shooter.setPower(-0.75);
                     runtime.reset();
+                    telemetry.addData("Shooter: ", robot.shooter.getPower());
+                    telemetry.addData("Timer: ", runtime.seconds());
+                    telemetry.update();
                     auto++;
                     break;
 
@@ -114,12 +117,16 @@ public class Auton1 extends OpMode{
                     //    reset the timer again. Once it reaches 1.5 seconds again, move the
                     //    disc arm back into position and reset the timer. Repeat 2 more times
                     for(int i = 0; i < 3; i++){
+                        telemetry.addData("Timer: ", runtime.seconds());
+                        telemetry.update();
                         if(runtime.seconds() >= 1.5){
                             robot.discPlacer.setPosition(0.1);
                         }
 
                         runtime.reset();
 
+                        telemetry.addData("Timer: ", runtime.seconds());
+                        telemetry.update();
                         if(runtime.seconds() >= 1.5){
                             robot.discPlacer.setPosition(1.0);
                         }
