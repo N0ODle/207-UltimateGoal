@@ -27,6 +27,8 @@ public class Auton1 extends OpMode{
     Bot robot = new Bot();
     int auto = 0;
 
+    int shotCount = 1;
+
     public void init() {
         robot.init(hardwareMap, telemetry, false);
 //        tensorFlow.init(hardwareMap, telemetry);
@@ -106,86 +108,59 @@ public class Auton1 extends OpMode{
                     // Run the shooter to the correct power and start the timer
                     robot.shooter.setPower(-0.75);
                     runtime.reset();
-                    telemetry.addData("Shooter: ", robot.shooter.getPower());
-                    telemetry.addData("Timer: ", runtime.seconds());
-                    telemetry.update();
                     auto++;
                     break;
 
                 case 4:
-                    // Once the timer reaches at least 1.5 seconds, shoot the first disc and
-                    //    reset the timer again. Once it reaches 1.5 seconds again, move the
-                    //    disc arm back into position and reset the timer. Repeat 2 more times
-                    for(int i = 0; i < 3; i++){
-                        telemetry.addData("Timer: ", runtime.seconds());
-                        telemetry.update();
-                        if(runtime.seconds() >= 1.5){
-                            robot.discPlacer.setPosition(0.1);
-                        }
+                    double delay = 1.0;
+                    if(runtime.seconds() < 1.5){ }
 
-                        runtime.reset();
-
-                        telemetry.addData("Timer: ", runtime.seconds());
-                        telemetry.update();
-                        if(runtime.seconds() >= 1.5){
-                            robot.discPlacer.setPosition(1.0);
-                        }
-
-                        runtime.reset();
+                    else if(runtime.seconds() < delay * 2){
+                        robot.discPlacer.setPosition(0.1);
                     }
 
-                    // Set shooter power to 0
+                    else if(runtime.seconds() < delay * 3){
+                        robot.discPlacer.setPosition(1.0);
+                    }
+
+                    else{
+                        shotCount++;
+                        if(shotCount > 3){
+                            auto++;
+                        }
+
+                        else{
+                            runtime.reset();
+                        }
+                    }
+
+                    break;
+
+                case 5:
                     robot.shooter.setPower(0.0);
                     auto = -1;
                     break;
 
-                case 5:
-                    en = robot.autonDrive(MovementEnum.BACKWARD, 2900);
-                    robot.changeRunModeAuton(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.drivePower(1.0);
-                    telemetry.addData("Cas1, en: ", en);
-                    telemetry.addData("FL: ", robot.FL.getCurrentPosition());
-                    telemetry.addData("FR: ", robot.FR.getCurrentPosition());
-                    telemetry.addData("BL: ", robot.BL.getCurrentPosition());
-                    telemetry.addData("BR: ", robot.BR.getCurrentPosition());
-
-
-                    telemetry.update();
-
-
-                    if(en >= 2900){
-                        robot.autonDrive(MovementEnum.STOP, 0);
-                        robot.changeRunModeAuton(DcMotor.RunMode.RUN_USING_ENCODER);
-                        robot.changeRunModeAuton(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                        robot.strafePower(0.0);
-                        auto++;
-                    }
-                    break;
-
                 case 6:
-                    en = robot.autonDrive(MovementEnum.LEFTTURN, 1000);
+                    en = robot.autonDrive(MovementEnum.FORWARD, (int)(TICKS_PER_INCH * 8));
                     robot.changeRunModeAuton(DcMotor.RunMode.RUN_TO_POSITION);
                     robot.drivePower(0.5);
-//                robot.drivePower(1.0);
                     telemetry.addData("Cas1, en: ", en);
                     telemetry.addData("FL: ", robot.FL.getCurrentPosition());
                     telemetry.addData("FR: ", robot.FR.getCurrentPosition());
                     telemetry.addData("BL: ", robot.BL.getCurrentPosition());
                     telemetry.addData("BR: ", robot.BR.getCurrentPosition());
 
-
                     telemetry.update();
 
-
-                    if(en >= 1000){
+                    if(en >= (int)(TICKS_PER_INCH * 70)){
                         robot.autonDrive(MovementEnum.STOP, 0);
                         robot.changeRunModeAuton(DcMotor.RunMode.RUN_USING_ENCODER);
                         robot.changeRunModeAuton(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                         robot.strafePower(0.0);
-                        robot.wobbleGrabber.setPosition(0.9);
-                        robot.wobbleHook.setPosition(1.0);
-                        Thread.sleep(1000);
-                        auto++;
+
+                        robot.wobbleGrabber.setPosition(1.0);
+                        auto = -1;
                     }
                     break;
 
