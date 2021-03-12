@@ -18,7 +18,7 @@ import java.lang.Thread;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 //import com.vuforia.CameraDevice;
 
-@Autonomous(name="auton test", group="Autonomous")
+@Autonomous(name="Auton1", group="Autonomous")
 public class Auton1 extends OpMode{
     private static final double TICKS_PER_REV = 403.9 * (80.0/72.0);
     private static final double TICKS_PER_INCH = TICKS_PER_REV/(4.0 * Math.PI);
@@ -77,6 +77,7 @@ public class Auton1 extends OpMode{
                     break;
 
                 case 1:
+                    // set wobble hook pos to grabbing position and wobble grabber to an in position
                     robot.wobbleGrabber.setPosition(0.0);
                     robot.wobbleHook.setPosition(1.0);
                     Thread.sleep(1000);
@@ -84,6 +85,7 @@ public class Auton1 extends OpMode{
                     break;
 
                 case 2:
+                    // drive forward 70 inches (to the line) and stop
                     int en = robot.autonDrive(MovementEnum.FORWARD, (int)(TICKS_PER_INCH * 70));
                     robot.changeRunModeAuton(DcMotor.RunMode.RUN_TO_POSITION);
                     robot.drivePower(0.5);
@@ -95,6 +97,7 @@ public class Auton1 extends OpMode{
 
                     telemetry.update();
 
+                    // stop when at 70 inches
                     if(en >= (int)(TICKS_PER_INCH * 70)){
                         robot.autonDrive(MovementEnum.STOP, 0);
                         robot.changeRunModeAuton(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -112,23 +115,28 @@ public class Auton1 extends OpMode{
                     break;
 
                 case 4:
-                    double delay = 1.0;
-                    if(runtime.seconds() < 1.5){ }
+                    // if the timer is less than 1.5 sec from last reset, do nothing
+                    double delay = 0.8;
+                    if(runtime.seconds() < 1.4){ }
 
+                    // if it is 2 sec from last reset, shoot disc
                     else if(runtime.seconds() < delay * 2){
                         robot.discPlacer.setPosition(0.1);
                     }
 
+                    // one sec after shooting dic, reset arm
                     else if(runtime.seconds() < delay * 3){
                         robot.discPlacer.setPosition(1.0);
                     }
 
                     else{
+                        // If the amount of shots shot is 3, move onto next case
                         shotCount++;
                         if(shotCount > 3){
                             auto++;
                         }
 
+                        // if not, reset the timer and go through the case again
                         else{
                             runtime.reset();
                         }
@@ -137,11 +145,13 @@ public class Auton1 extends OpMode{
                     break;
 
                 case 5:
+                    // Set shooter power to 0 and move on
                     robot.shooter.setPower(0.0);
-                    auto = -1;
+                    auto++;
                     break;
 
                 case 6:
+                    // drive forward another 8 inches
                     en = robot.autonDrive(MovementEnum.FORWARD, (int)(TICKS_PER_INCH * 8));
                     robot.changeRunModeAuton(DcMotor.RunMode.RUN_TO_POSITION);
                     robot.drivePower(0.5);
@@ -153,7 +163,8 @@ public class Auton1 extends OpMode{
 
                     telemetry.update();
 
-                    if(en >= (int)(TICKS_PER_INCH * 70)){
+                    // once at 8 inches, stop and put the wobble goal down
+                    if(en >= (int)(TICKS_PER_INCH * 8)){
                         robot.autonDrive(MovementEnum.STOP, 0);
                         robot.changeRunModeAuton(DcMotor.RunMode.RUN_USING_ENCODER);
                         robot.changeRunModeAuton(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

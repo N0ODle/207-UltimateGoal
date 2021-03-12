@@ -91,16 +91,16 @@ public class Tele extends OpMode {
     // Update's shooter power
     private void updateShooter(){
         double minPower = 0.0;
-        double goalPower = -0.8;
-        double pegPower = -0.75;
+        double goalPower = -0.75;
+        double pegPower = -0.65;
 
         // If right bumper is pressed, add enough power to shoot into the top goal
         if(gamepad2.right_bumper){
-            bot.shooter.setPower(goalPower);
+            bot.shooter.setPower(pegPower);
         }
         // If left bumper not pressed, do not do anything
         else if(gamepad2.left_bumper){
-            bot.shooter.setPower(pegPower);
+            bot.shooter.setPower(goalPower);
         }
         // if right bumper is pressed down, add enough power to shoot the peg
         else {
