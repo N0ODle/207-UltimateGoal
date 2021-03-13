@@ -27,7 +27,14 @@ public class Auton1 extends OpMode{
     Bot robot = new Bot();
     int auto = 0;
 
+    // count the number of ring shots taken
     int shotCount = 1;
+
+    // variable for the wobble hook (hook starts out as closed)
+    boolean hookOpen = false;
+
+    // variable for the wobble arm (arm starts out as out)
+    boolean armIn = false;
 
     public void init() {
         robot.init(hardwareMap, telemetry, false);
@@ -116,8 +123,8 @@ public class Auton1 extends OpMode{
 
                 case 4:
                     // if the timer is less than 1.5 sec from last reset, do nothing
-                    double delay = 0.8;
-                    if(runtime.seconds() < 1.4){ }
+                    double delay = 1.0;
+                    if(runtime.seconds() < 1.5){ }
 
                     // if it is 2 sec from last reset, shoot disc
                     else if(runtime.seconds() < delay * 2){
@@ -147,7 +154,7 @@ public class Auton1 extends OpMode{
                 case 5:
                     // Set shooter power to 0 and move on
                     robot.shooter.setPower(0.0);
-                    auto++;
+                    auto = -1;
                     break;
 
                 case 6:
@@ -169,58 +176,42 @@ public class Auton1 extends OpMode{
                         robot.changeRunModeAuton(DcMotor.RunMode.RUN_USING_ENCODER);
                         robot.changeRunModeAuton(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                         robot.strafePower(0.0);
-
                         robot.wobbleGrabber.setPosition(1.0);
-                        auto = -1;
+                        runtime.reset();
+                        auto++;
                     }
+
                     break;
 
                 case 7:
-                    en = robot.autonDrive(MovementEnum.RIGHTTURN, 1000);
-                    robot.changeRunModeAuton(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.drivePower(0.5);
-                    telemetry.addData("Cas1, en: ", en);
-                    telemetry.addData("FL: ", robot.FL.getCurrentPosition());
-                    telemetry.addData("FR: ", robot.FR.getCurrentPosition());
-                    telemetry.addData("BL: ", robot.BL.getCurrentPosition());
-                    telemetry.addData("BR: ", robot.BR.getCurrentPosition());
+                    if(runtime.seconds() < 1.5){ }
 
+                    else if(runtime.seconds() < 2){
+                        hookOpen = true;
+                        robot.wobbleHook.setPosition(0.1);
+                    }
 
-                    telemetry.update();
-
-
-                    if(en >= 1000){
-                        robot.autonDrive(MovementEnum.STOP, 0);
-                        robot.changeRunModeAuton(DcMotor.RunMode.RUN_USING_ENCODER);
-                        robot.changeRunModeAuton(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                        robot.strafePower(0.0);
-                        auto++;
+                    else{
+                        if(hookOpen == true){
+                            runtime.reset();
+                            auto++;
+                        }
                     }
                     break;
 
 
                 case 8:
-                    en = robot.autonDrive(MovementEnum.RIGHTSTRAFE, 200);
-                    robot.changeRunModeAuton(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.drivePower(0.5);
-                    telemetry.addData("Cas1, en: ", en);
-                    telemetry.addData("FL: ", robot.FL.getCurrentPosition());
-                    telemetry.addData("FR: ", robot.FR.getCurrentPosition());
-                    telemetry.addData("BL: ", robot.BL.getCurrentPosition());
-                    telemetry.addData("BR: ", robot.BR.getCurrentPosition());
+                    if(runtime.seconds() < 1.5){ }
 
+                    else if(runtime.seconds() < 2){
+                        armIn = true;
+                        robot.wobbleGrabber.setPosition(0.1);
+                    }
 
-                    telemetry.update();
-
-
-                    if(en >= 200){
-                        robot.autonDrive(MovementEnum.STOP, 0);
-                        robot.changeRunModeAuton(DcMotor.RunMode.RUN_USING_ENCODER);
-                        robot.changeRunModeAuton(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                        robot.strafePower(0.0);
-                        robot.intake.setPower(0.9);
-                        Thread.sleep(1000);
-                        auto++;
+                    else{
+                        if(armIn == true){
+                            auto++;
+                        }
                     }
                     break;
 
