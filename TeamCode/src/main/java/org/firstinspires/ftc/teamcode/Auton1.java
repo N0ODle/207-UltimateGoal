@@ -159,7 +159,7 @@ public class Auton1 extends OpMode{
 
                 case 6:
                     // drive forward another 8 inches
-                    en = robot.autonDrive(MovementEnum.FORWARD, (int)(TICKS_PER_INCH * 8));
+                    en = robot.autonDrive(MovementEnum.FORWARD, (int)(TICKS_PER_INCH * 10));
                     robot.changeRunModeAuton(DcMotor.RunMode.RUN_TO_POSITION);
                     robot.drivePower(0.5);
                     telemetry.addData("Cas1, en: ", en);
@@ -171,7 +171,7 @@ public class Auton1 extends OpMode{
                     telemetry.update();
 
                     // once at 8 inches, stop and put the wobble goal down
-                    if(en >= (int)(TICKS_PER_INCH * 8)){
+                    if(en >= (int)(TICKS_PER_INCH * 10)){
                         robot.autonDrive(MovementEnum.STOP, 0);
                         robot.changeRunModeAuton(DcMotor.RunMode.RUN_USING_ENCODER);
                         robot.changeRunModeAuton(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -184,6 +184,7 @@ public class Auton1 extends OpMode{
                     break;
 
                 case 7:
+                    // Wait 1.5 seconds and then open the wobble hook
                     if(runtime.seconds() < 1.5){ }
 
                     else if(runtime.seconds() < 2){
@@ -191,6 +192,7 @@ public class Auton1 extends OpMode{
                         robot.wobbleHook.setPosition(0.1);
                     }
 
+                    // If the wobble hook has already been opened, move to the next case
                     else{
                         if(hookOpen == true){
                             runtime.reset();
@@ -201,6 +203,7 @@ public class Auton1 extends OpMode{
 
 
                 case 8:
+                    // Wait 1.5 seconds and then retract the wobble arm
                     if(runtime.seconds() < 1.5){ }
 
                     else if(runtime.seconds() < 2){
@@ -208,9 +211,10 @@ public class Auton1 extends OpMode{
                         robot.wobbleGrabber.setPosition(0.1);
                     }
 
+                    // If the wobble arm has already been retracted, move to the next case
                     else{
                         if(armIn == true){
-                            auto++;
+                            auto = -1;
                         }
                     }
                     break;
